@@ -1,19 +1,109 @@
-// linkedlists.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
-//
-
 #include <iostream>
+#include <cassert>
+using namespace std;
 
-int main()
-{
-    std::cout << "Hello World!\n";
+// Declaration of a doubly-linked list
+class List {
+private:
+	int mida = 0;
+	int capacity;
+	int* array;
+public:
+	// Constructor and destructor
+	List() {
+		capacity = 10;
+		array = new int[capacity];
+	}
+	List(int ca) {
+		capacity = ca;
+		array = new int[capacity];
+	}
+	List(int ca, int* inicial, int midainicial) {
+		capacity = ca;
+		mida = midainicial;
+		array = new int[capacity];
+		for (int i = 0; i < midainicial; i++) {
+			array[i] = inicial[i];
+		}
+	}
+	~List() {};
+
+	
+	void insert(unsigned int position, const int& value) {
+		if (capacity <= mida) {
+			capacity*= 2;
+		}
+		int* newarray = new int[capacity];
+		mida++;
+		int i;
+		for (i = 0; i < position; i++) {
+			newarray[i] = array[i];
+		}
+		newarray[i] = value;
+		i++;
+		while (i < mida) {
+			newarray[i] = array[i - 1];
+			i++;
+		}
+		delete[] array;
+		array = newarray;
+	};
+
+	void print() {
+		for (int i = 0; i < mida; i++) {
+			cout << array[i] << ", ";
+		}
+		//pointing
+		Node* current = first;
+		while (current != nullptr) {
+			cout << current->value << ", ";
+			current = current->next;
+		}
+		cout << endl;
+	}
+	// Modifiers
+	void push_back(const int& value) {
+		Node* newNode = new Node();
+		newNode->value = value;
+		newNode->next = nullptr;
+
+		if (last == nullptr) {  
+			first = last = newNode;
+			newNode->prev = nullptr;
+		}
+		else {  
+			newNode->prev = last;
+			last->next = newNode;
+			last = newNode;
+		}
+
+		num_elems++;
+	}
+private:
+	// Internal struct for list nodes
+	struct Node {
+		int value;
+		Node* next;
+		Node* prev;
+	};
+
+	// List internals
+	Node* first = nullptr;
+	Node* last = nullptr;
+	unsigned int num_elems = 0;
+};
+
+int main() {
+
+	List a(10);
+
+	a.insert(0, 7);
+	a.print();
+	a.insert(1, 5);
+	a.print();
+	a.insert(2, 3);
+	a.print();
+	a.push_back(6);
+	a.print();
+
 }
-
-// Ejecutar programa: Ctrl + F5 o menú Depurar > Iniciar sin depurar
-// Depurar programa: F5 o menú Depurar > Iniciar depuración
-
-// Sugerencias para primeros pasos: 1. Use la ventana del Explorador de soluciones para agregar y administrar archivos
-//   2. Use la ventana de Team Explorer para conectar con el control de código fuente
-//   3. Use la ventana de salida para ver la salida de compilación y otros mensajes
-//   4. Use la ventana Lista de errores para ver los errores
-//   5. Vaya a Proyecto > Agregar nuevo elemento para crear nuevos archivos de código, o a Proyecto > Agregar elemento existente para agregar archivos de código existentes al proyecto
-//   6. En el futuro, para volver a abrir este proyecto, vaya a Archivo > Abrir > Proyecto y seleccione el archivo .sln
